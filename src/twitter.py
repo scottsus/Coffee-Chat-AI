@@ -16,6 +16,7 @@ def twitter(twitter_handle):
 
         # Scrape tweets using sntwitter
         scraper = sntwitter.TwitterSearchScraper(twitter_handle)
+
         tweets = []
         for i, tweet in enumerate(scraper.get_items()):
             data = [
@@ -42,7 +43,7 @@ def twitter(twitter_handle):
         load_dotenv()
         openai_key = os.getenv('OPENAI_API_KEY')
         llm = OpenAI()
-        pandas_ai = PandasAI(llm, conversational=True)
+        pandas_ai = PandasAI(llm, conversational=True,enable_cache=False)
 
         # Log the prompt and run pandas_ai
         prompt = 'You are a talk show host and youre about to interview a very famous startup founder. Based on the tweets of this person, generate five potential interesting questions that a wide range of people might find interesting.'
@@ -56,5 +57,5 @@ def twitter(twitter_handle):
         print('Twitter error')
         return []
 
-test_handle = '@chrispramana'
-# print(twitter(test_handle))
+test_handle = '@susantoscott' 
+#print(twitter(test_handle))

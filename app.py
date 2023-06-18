@@ -22,7 +22,7 @@ def form_data():
 
     # Regex patterns for YouTube, Twitter, and article links
     youtube_pattern = re.compile(r'^(https?:\/\/)?(www\.)?youtube\.com')
-    twitter_pattern = re.compile(r'^@')
+    twitter_pattern = re.compile(r'^@[\w]+')
 
     res = ''
     if youtube_pattern.match(url):
