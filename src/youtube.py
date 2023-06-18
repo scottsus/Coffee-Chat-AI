@@ -47,7 +47,8 @@ def youtube(youtube_url):
                 chain = load_qa_chain(llm, chain_type="stuff")
                 with get_openai_callback() as cb:
                     response = chain.run(input_documents=docs, question=user_question)
-                return response
+                responselist = re.findall(r'\d+\.\s+(.*)', response)
+                return responselist
 
 youtube_url = 'https://www.youtube.com/watch?v=UYOwweziqGI'
-# print(youtube(youtube_url))
+#print(youtube(youtube_url))
