@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import re
 
 import sys
 sys.path.append('src/')
@@ -19,7 +20,17 @@ def home():
 def form_data():
     url = request.form.to_dict()['url']
     print(f'url: {url}')
+    # Regex patterns for YouTube, Twitter, and article links
+    youtube_pattern = re.compile(r'^(https?:\/\/)?(www\.)?youtube\.com')
+    twitter_pattern = re.compile(r'^@')
 
+    if youtube_pattern.match(url):
+        return youtube(url)
+    elif twitter_pattern.match(url):
+        return twitter(url)
+    else:
+        return article(url)
+    
     # add_to_question_bank(article(article_url))
     # add_to_question_bank(twitter(twitter_url))
     # add_to_question_bank(youtube(youtube_url))

@@ -7,3 +7,4 @@
 'You are a talk show host and youre about to interview a very famous startup founder. Based on the tweets of this person, generate three potential interesting questions that a wide range of people might find interesting.', (5632, 1169)
 'You are a talk show host and youre about to interview a very famous startup founder. Based on the tweets of this person, generate three potential interesting questions that a wide range of people might find interesting. Dont include any additional information except the questions.', (7168, 762)
 'One more thing, what is the founders name?', (8192, 754)
+'You are a talk show host and youre about to interview a very famous startup founder. Based on the tweets of this person, generate five potential interesting questions that a wide range of people might find interesting.', (9216, 1310)

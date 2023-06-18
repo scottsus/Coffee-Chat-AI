@@ -45,7 +45,7 @@ def twitter(twitter_handle):
         pandas_ai = PandasAI(llm, conversational=True)
 
         # Log the prompt and run pandas_ai
-        prompt = 'You are a talk show host and youre about to interview a very famous startup founder. Based on the tweets of this person, generate three potential interesting questions that a wide range of people might find interesting.'
+        prompt = 'You are a talk show host and youre about to interview a very famous startup founder. Based on the tweets of this person, generate five potential interesting questions that a wide range of people might find interesting.'
         logging.info(f'Prompt: {prompt}')
         questions = pandas_ai(tweet_df, prompt=prompt)
         questionlist = re.findall(r'\d+\.\s+(.*)', questions)
