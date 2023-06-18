@@ -1,6 +1,6 @@
 from langchain.document_loaders import UnstructuredHTMLLoader
 from bs4 import BeautifulSoup
-import requests
+import re
 import pandas as pd
 from tqdm.notebook import tqdm
 import snscrape.modules.twitter as sntwitter
@@ -41,16 +41,17 @@ def twitter(twitter_handle):
     load_dotenv()
     openai_key = os.getenv('OPENAI_API_KEY')
     llm = OpenAI()
-    pandas_ai = PandasAI(llm)
+    pandas_ai = PandasAI(llm, conversational=True)
 
     # Log the prompt and run pandas_ai
     try:
         prompt = 'You are a talk show host and youre about to interview a very famous startup founder. Based on the tweets of this person, generate three potential interesting questions that a wide range of people might find interesting.'
         logging.info(f'Prompt: {prompt}')
-        ans = pandas_ai(tweet_df, prompt=prompt)
-        return ans
+        questions = pandas_ai(tweet_df, prompt=prompt)
+        questionlist = re.findall(r'\d+\.\s+(.*)', questions)
+        return questionlist
     except Exception:
         logging.exception("Exception occurred")
 
 test_handle = '@chrispramana'
-# print(twitter(test_handle))
+#print(twitter(test_handle))
