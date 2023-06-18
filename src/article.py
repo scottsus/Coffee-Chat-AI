@@ -23,15 +23,18 @@ def scrape(url):
     # Send a GET request to the URL and retrieve the HTML content
     response = requests.get(url)
     html_content = response.content
+
     # Parse the HTML content using BeautifulSoup
     soup = BeautifulSoup(html_content, 'html.parser')
     for ad in soup.find_all(class_='advertisement'):
         ad.extract()
+
     # Extract the main content area by selecting specific HTML tags or classes
-    # Example: Extract content from a specific tag with class name
     main_content = soup.find(class_='article-content')
+
     # Clean up the extracted content
     clean_text = main_content.get_text(separator='\n')
+
     # Remove extra whitespace and newlines
     clean_text = re.sub(r'\s+', ' ', clean_text).strip()
     return clean_text
@@ -48,6 +51,7 @@ def summarise(scraped):
 def questions(scraped):
     text_splitter = CharacterTextSplitter()
     chunks = text_splitter.split_text(scraped)
+
     #create embeddings
     embeddings = OpenAIEmbeddings()
     knowledge_base = FAISS.from_texts(chunks, embeddings)
@@ -61,13 +65,16 @@ def questions(scraped):
     return response
 
 def article(article_url):
-    scraped = scrape(article_url)
-    question = questions(scraped)
-    # summary = summarise(scraped)
-    questionlist = re.findall(r'\d+\.\s+(.*)', question)
-    print(questionlist)
-    return questionlist
+    try:
+        scraped = scrape(article_url)
+        question = questions(scraped)
+        questionlist = re.findall(r'\d+\.\s+(.*)', question)
+        
+        return questionlist
+    
+    except Exception:
+        print('Article error')
+        return []
 
 test_url = 'https://techcrunch.com/2021/09/05/singapore-based-caregiving-startup-homage-raises-30m-series-c/?guccounter=1&guce_referrer=aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS8&guce_referrer_sig=AQAAAJPl9ewGP8Q6BDiQ3gAKTFqtucPF7IHWeLvvCbsr5rVm3K_pB70zbBssEOXan2VfI5TTFN2q8vbj_qcchBqjO3zEyRB_XEJ8sfzTjD8f2RX0qIIKJPHrO7NhV65xgjV4YEtOL_LRKVC2KPvfG6ycxATxOE3u9_hKEqMtiv-Zh8XF'
-
 #article(test_url)
