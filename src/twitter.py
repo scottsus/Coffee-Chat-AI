@@ -52,4 +52,5 @@ def twitter(twitter_handle):
     except Exception:
         logging.exception("Exception occurred")
 
-twitter('@chrispramana')
+test_handle = '@chrispramana'
+# print(twitter(test_handle))

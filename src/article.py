@@ -1,27 +1,19 @@
-from langchain.document_loaders import UnstructuredHTMLLoader
 from bs4 import BeautifulSoup
 import requests
-import pandas as pd
-from tqdm.notebook import tqdm
-import snscrape.modules.twitter as sntwitter
 import logging
 import re
-from youtube_transcript_api import YouTubeTranscriptApi
 from langchain.chains.summarize import load_summarize_chain
 from langchain.chains import AnalyzeDocumentChain
-from youtube_transcript_api import YouTubeTranscriptApi
 from langchain.llms import OpenAI
 import os
 from langchain.text_splitter import CharacterTextSplitter
-from langchain.chains import LLMChain
-from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 from langchain.llms import OpenAI
 from langchain.chains.question_answering import load_qa_chain
 from langchain.callbacks import get_openai_callback
-from langchain.vectorstores import Chroma
 from dotenv import load_dotenv
+
 load_dotenv()
 openai_key = os.getenv('OPENAI_API_KEY')
 log_file = 'logs/article.log'
@@ -75,4 +67,4 @@ def article(article_url):
     print(question)
 
 test_url = 'https://techcrunch.com/2021/09/05/singapore-based-caregiving-startup-homage-raises-30m-series-c/?guccounter=1&guce_referrer=aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS8&guce_referrer_sig=AQAAAJPl9ewGP8Q6BDiQ3gAKTFqtucPF7IHWeLvvCbsr5rVm3K_pB70zbBssEOXan2VfI5TTFN2q8vbj_qcchBqjO3zEyRB_XEJ8sfzTjD8f2RX0qIIKJPHrO7NhV65xgjV4YEtOL_LRKVC2KPvfG6ycxATxOE3u9_hKEqMtiv-Zh8XF'
-article(test_url)
+# article(test_url)

@@ -1,27 +1,16 @@
-from langchain.document_loaders import UnstructuredHTMLLoader
-from bs4 import BeautifulSoup
-import requests
-import pandas as pd
-from tqdm.notebook import tqdm
-import snscrape.modules.twitter as sntwitter
 import logging
 import re
+import os
 from youtube_transcript_api import YouTubeTranscriptApi
-from langchain.chains.summarize import load_summarize_chain
-from langchain.chains import AnalyzeDocumentChain
 from youtube_transcript_api import YouTubeTranscriptApi
 from langchain.llms import OpenAI
-import os
 from langchain.text_splitter import CharacterTextSplitter
 from dotenv import load_dotenv
-from langchain.chains import LLMChain
-from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 from langchain.llms import OpenAI
 from langchain.chains.question_answering import load_qa_chain
 from langchain.callbacks import get_openai_callback
-from langchain.vectorstores import Chroma
 from dotenv import load_dotenv
 
 def youtube(youtube_url):
@@ -58,8 +47,7 @@ def youtube(youtube_url):
                 chain = load_qa_chain(llm, chain_type="stuff")
                 with get_openai_callback() as cb:
                     response = chain.run(input_documents=docs, question=user_question)
-                    print(cb)
-                print(response)
+                return response
 
 youtube_url = 'https://www.youtube.com/watch?v=UYOwweziqGI'
-youtube(youtube_url)
+# print(youtube(youtube_url))
