@@ -13,13 +13,10 @@ from youtube_transcript_api import YouTubeTranscriptApi
 from langchain.llms import OpenAI
 import os
 from langchain.text_splitter import CharacterTextSplitter
+from dotenv import load_dotenv
 
-# Set up logging to a file with UTF-8 encoding
- #os.environ["OPENAI_API_KEY"] = user_api_key
-
-openai_api_key = "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"
-os.environ["OPENAI_API_KEY"] = "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"
-user_api_key = "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"
+load_dotenv()
+openai_key = os.getenv('OPENAI_API_KEY')
 log_file = 'youtube.log'
 logging.basicConfig(filename=log_file, encoding='utf-8', level=logging.INFO)
 def get_youtube_id(url):
@@ -42,13 +39,10 @@ if video_url :
             for item in t:
                 text = item['text']
                 finalString += text + " "
-
             text_splitter = CharacterTextSplitter()
             chunks = text_splitter.split_text(finalString)
-
             summary_chain = load_summarize_chain(OpenAI(temperature=0),
                                             chain_type="map_reduce",verbose=True)
-            
             summarize_document_chain = AnalyzeDocumentChain(combine_docs_chain=summary_chain)
-
             answer = summarize_document_chain.run(chunks)
+            print(f'ans: {answer}')

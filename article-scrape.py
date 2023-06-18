@@ -13,10 +13,24 @@ from youtube_transcript_api import YouTubeTranscriptApi
 from langchain.llms import OpenAI
 import os
 from langchain.text_splitter import CharacterTextSplitter
+from langchain.chains import LLMChain
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.vectorstores import FAISS
+from langchain.llms import OpenAI
+from langchain.chains.question_answering import load_qa_chain
+from langchain.callbacks import get_openai_callback
+from langchain.vectorstores import Chroma
+from langchain.agents.agent_toolkits import (
+    create_vectorstore_agent,
+    VectorStoreToolkit,
+    VectorStoreInfo
+)
 log_file = 'article.log'
 logging.basicConfig(filename=log_file, encoding='utf-8', level=logging.INFO)
-openai_api_key = "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"
-os.environ["OPENAI_API_KEY"] = "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"
+from dotenv import load_dotenv
+load_dotenv()
+
 def scrape(url):
     # Send a GET request to the URL and retrieve the HTML content
     response = requests.get(url)
@@ -37,16 +51,38 @@ def scrape(url):
 def summarise(scraped):
     text_splitter = CharacterTextSplitter()
     chunks = text_splitter.split_text(scraped)
-
     summary_chain = load_summarize_chain(OpenAI(temperature=0),
-                                            chain_type="map_reduce",verbose=True)
-            
+                                            chain_type="map_reduce",verbose=True)  
     summarize_document_chain = AnalyzeDocumentChain(combine_docs_chain=summary_chain)
-
     answer = summarize_document_chain.run(chunks)
     return answer
 
 url = 'https://techcrunch.com/2021/09/05/singapore-based-caregiving-startup-homage-raises-30m-series-c/?guccounter=1&guce_referrer=aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS8&guce_referrer_sig=AQAAAJPl9ewGP8Q6BDiQ3gAKTFqtucPF7IHWeLvvCbsr5rVm3K_pB70zbBssEOXan2VfI5TTFN2q8vbj_qcchBqjO3zEyRB_XEJ8sfzTjD8f2RX0qIIKJPHrO7NhV65xgjV4YEtOL_LRKVC2KPvfG6ycxATxOE3u9_hKEqMtiv-Zh8XF'
 scraped = scrape(url)
-summary = summarise(scraped)
-print(summary)
+# summary = summarise(scraped)
+# print(summary)
+
+load_dotenv()
+openai_key = os.getenv('OPENAI_API_KEY')
+llm = OpenAI()
+prompt = 'You are a talk show host and youre about to interview a very famous startup founder. Based on the article of this person, generate three potential interesting questions that a wide range of people might find interesting.'
+chain = load_qa_chain(llm=llm, chain_type="stuff")
+with get_openai_callback() as cb:
+    response = chain.run(input_documents=scraped,question = prompt)
+    print(cb)
+
+print(response)
+
+# Log the prompt 
+try:
+  
+    logging.info(f'Prompt: {prompt}')
+    chain = LLMChain(llm=llm, prompt=prompt)
+    # Step 7: Run the LLMChain
+    output = chain.run(prompt)
+    print(output)
+    #print(f'ans: {ans}')
+except Exception:
+    logging.exception("Exception occurred")
+finally:
+    print("Done")
