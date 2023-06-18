@@ -26,10 +26,13 @@ from langchain.agents.agent_toolkits import (
     VectorStoreToolkit,
     VectorStoreInfo
 )
-log_file = 'article.log'
-logging.basicConfig(filename=log_file, encoding='utf-8', level=logging.INFO)
 from dotenv import load_dotenv
 load_dotenv()
+openai_key = os.getenv('OPENAI_API_KEY')
+log_file = 'article.log'
+logging.basicConfig(filename=log_file, encoding='utf-8', level=logging.INFO)
+
+
 
 def scrape(url):
     # Send a GET request to the URL and retrieve the HTML content
@@ -57,32 +60,26 @@ def summarise(scraped):
     answer = summarize_document_chain.run(chunks)
     return answer
 
+def questions(scraped):
+    text_splitter = CharacterTextSplitter()
+    chunks = text_splitter.split_text(scraped)
+    #create embeddings
+    embeddings = OpenAIEmbeddings()
+    knowledge_base = FAISS.from_texts(chunks, embeddings)
+    user_question = 'You are a talk show host and youre about to interview a very famous startup founder. Based on the article of this person, generate three potential interesting questions that a wide range of people might find interesting.'
+    docs = knowledge_base.similarity_search(user_question)
+        
+    llm = OpenAI()
+    chain = load_qa_chain(llm, chain_type="stuff")
+    with get_openai_callback() as cb:
+        response = chain.run(input_documents=docs, question=user_question)
+        print(cb)
+    print(response)
+
+
 url = 'https://techcrunch.com/2021/09/05/singapore-based-caregiving-startup-homage-raises-30m-series-c/?guccounter=1&guce_referrer=aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS8&guce_referrer_sig=AQAAAJPl9ewGP8Q6BDiQ3gAKTFqtucPF7IHWeLvvCbsr5rVm3K_pB70zbBssEOXan2VfI5TTFN2q8vbj_qcchBqjO3zEyRB_XEJ8sfzTjD8f2RX0qIIKJPHrO7NhV65xgjV4YEtOL_LRKVC2KPvfG6ycxATxOE3u9_hKEqMtiv-Zh8XF'
 scraped = scrape(url)
+question = questions(scraped)
 # summary = summarise(scraped)
-# print(summary)
+print(question)
 
-load_dotenv()
-openai_key = os.getenv('OPENAI_API_KEY')
-llm = OpenAI()
-prompt = 'You are a talk show host and youre about to interview a very famous startup founder. Based on the article of this person, generate three potential interesting questions that a wide range of people might find interesting.'
-chain = load_qa_chain(llm=llm, chain_type="stuff")
-with get_openai_callback() as cb:
-    response = chain.run(input_documents=scraped,question = prompt)
-    print(cb)
-
-print(response)
-
-# Log the prompt 
-try:
-  
-    logging.info(f'Prompt: {prompt}')
-    chain = LLMChain(llm=llm, prompt=prompt)
-    # Step 7: Run the LLMChain
-    output = chain.run(prompt)
-    print(output)
-    #print(f'ans: {ans}')
-except Exception:
-    logging.exception("Exception occurred")
-finally:
-    print("Done")
