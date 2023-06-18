@@ -15,34 +15,36 @@ import os
 from langchain.text_splitter import CharacterTextSplitter
 from dotenv import load_dotenv
 
-load_dotenv()
-openai_key = os.getenv('OPENAI_API_KEY')
-log_file = 'logs/youtube.log'
-logging.basicConfig(filename=log_file, encoding='utf-8', level=logging.INFO)
-def get_youtube_id(url):
-        video_id = None
-        match = re.search(r"(?<=v=)[^&#]+", url)
-        if match :
-            video_id = match.group()
-        else : 
-            match = re.search(r"(?<=youtu.be/)[^&#]+", url)
+def youtube(youtube_url):
+    load_dotenv()
+    openai_key = os.getenv('OPENAI_API_KEY')
+    log_file = 'logs/youtube.log'
+    logging.basicConfig(filename=log_file, encoding='utf-8', level=logging.INFO)
+    def get_youtube_id(url):
+            video_id = None
+            match = re.search(r"(?<=v=)[^&#]+", url)
             if match :
                 video_id = match.group()
-        return video_id
-video_url = "https://www.youtube.com/watch?v=UYOwweziqGI"
-if video_url :
-        video_id = get_youtube_id(video_url)
+            else : 
+                match = re.search(r"(?<=youtu.be/)[^&#]+", url)
+                if match :
+                    video_id = match.group()
+            return video_id
+    if youtube_url:
+            video_id = get_youtube_id(youtube_url)
+            if video_id != "":
+                t = YouTubeTranscriptApi.get_transcript(video_id, languages=('en','fr','es', 'zh-cn', 'hi', 'ar', 'bn', 'ru', 'pt', 'sw' ))
+                finalString = ""
+                for item in t:
+                    text = item['text']
+                    finalString += text + " "
+                text_splitter = CharacterTextSplitter()
+                chunks = text_splitter.split_text(finalString)
+                summary_chain = load_summarize_chain(OpenAI(temperature=0),
+                                                chain_type="map_reduce",verbose=True)
+                summarize_document_chain = AnalyzeDocumentChain(combine_docs_chain=summary_chain)
+                answer = summarize_document_chain.run(chunks)
+                print(f'ans: {answer}')
 
-        if video_id != "":
-            t = YouTubeTranscriptApi.get_transcript(video_id, languages=('en','fr','es', 'zh-cn', 'hi', 'ar', 'bn', 'ru', 'pt', 'sw' ))
-            finalString = ""
-            for item in t:
-                text = item['text']
-                finalString += text + " "
-            text_splitter = CharacterTextSplitter()
-            chunks = text_splitter.split_text(finalString)
-            summary_chain = load_summarize_chain(OpenAI(temperature=0),
-                                            chain_type="map_reduce",verbose=True)
-            summarize_document_chain = AnalyzeDocumentChain(combine_docs_chain=summary_chain)
-            answer = summarize_document_chain.run(chunks)
-            print(f'ans: {answer}')
+youtube_url = 'https://www.youtube.com/watch?v=UYOwweziqGI'
+youtube(youtube_url)
