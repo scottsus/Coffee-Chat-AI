@@ -17,7 +17,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 openai_key = os.getenv('OPENAI_API_KEY')
-log_file = 'youtube.log'
+log_file = 'logs/youtube.log'
 logging.basicConfig(filename=log_file, encoding='utf-8', level=logging.INFO)
 def get_youtube_id(url):
         video_id = None

@@ -9,7 +9,7 @@ import os
 from dotenv import load_dotenv
 
 # Set up logging to a file with UTF-8 encoding
-log_file = 'twitter.log'
+log_file = 'logs/twitter.log'
 logging.basicConfig(filename=log_file, encoding='utf-8', level=logging.INFO)
 
 # Scrape tweets using sntwitter

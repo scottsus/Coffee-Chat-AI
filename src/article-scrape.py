@@ -29,7 +29,7 @@ from langchain.agents.agent_toolkits import (
 from dotenv import load_dotenv
 load_dotenv()
 openai_key = os.getenv('OPENAI_API_KEY')
-log_file = 'article.log'
+log_file = 'logs/article.log'
 logging.basicConfig(filename=log_file, encoding='utf-8', level=logging.INFO)
 
 
