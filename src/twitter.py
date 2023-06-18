@@ -9,6 +9,7 @@ import os
 from dotenv import load_dotenv
 
 def twitter(twitter_handle):
+    print(f'Searching for {twitter_handle}')
     try:
         # Set up logging to a file with UTF-8 encoding
         log_file = 'logs/twitter.log'
@@ -43,7 +44,7 @@ def twitter(twitter_handle):
         load_dotenv()
         openai_key = os.getenv('OPENAI_API_KEY')
         llm = OpenAI()
-        pandas_ai = PandasAI(llm, conversational=True,enable_cache=False)
+        pandas_ai = PandasAI(llm, conversational=True, enable_cache=False)
 
         # Log the prompt and run pandas_ai
         prompt = 'You are a talk show host and youre about to interview a very famous startup founder. Based on the tweets of this person, generate five potential interesting questions that a wide range of people might find interesting.'

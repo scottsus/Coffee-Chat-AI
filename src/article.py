@@ -58,7 +58,7 @@ def questions(scraped):
     user_question = 'You are a talk show host and youre about to interview a very famous startup founder. Based on the article of this person, generate five potential interesting questions that a wide range of people might find interesting.'
     docs = knowledge_base.similarity_search(user_question)
         
-    llm = OpenAI()
+    llm = OpenAI(cache=False)
     chain = load_qa_chain(llm, chain_type="stuff")
     with get_openai_callback() as cb:
         response = chain.run(input_documents=docs, question=user_question)
