@@ -17,22 +17,19 @@ def home():
 
 @app.route('/formData', methods=['POST'])
 def form_data():
-    d = request.form.to_dict()
-    name = d['name']
-    article_url = d['article_url']
-    twitter_url = d['twitter_url']
-    youtube_url = d['youtube_url']
+    url = request.form.to_dict()['url']
+    print(f'url: {url}')
 
-    def add_to_question_bank(questions_list):
-        for question in questions_list:
-            question_bank.append(question)
+    # def add_to_question_bank(questions_list):
+    #     for question in questions_list:
+    #         question_bank.append(question)
     
-    question_bank = []
-    add_to_question_bank(article(article_url))
-    add_to_question_bank(twitter(twitter_url))
-    add_to_question_bank(youtube(youtube_url))
+    # question_bank = []
+    # add_to_question_bank(article(article_url))
+    # add_to_question_bank(twitter(twitter_url))
+    # add_to_question_bank(youtube(youtube_url))
 
-    return jsonify({'Name': name, 'Questions': question_bank})
+    return jsonify({'Url': url})
 
 @app.route('/query')
 def query():
