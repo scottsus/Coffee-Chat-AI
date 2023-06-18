@@ -27,8 +27,6 @@ openai_key = os.getenv('OPENAI_API_KEY')
 log_file = 'logs/article.log'
 logging.basicConfig(filename=log_file, encoding='utf-8', level=logging.INFO)
 
-
-
 def scrape(url):
     # Send a GET request to the URL and retrieve the HTML content
     response = requests.get(url)
@@ -78,5 +76,4 @@ def article(article_url):
     print(question)
 
 test_url = 'https://techcrunch.com/2021/09/05/singapore-based-caregiving-startup-homage-raises-30m-series-c/?guccounter=1&guce_referrer=aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS8&guce_referrer_sig=AQAAAJPl9ewGP8Q6BDiQ3gAKTFqtucPF7IHWeLvvCbsr5rVm3K_pB70zbBssEOXan2VfI5TTFN2q8vbj_qcchBqjO3zEyRB_XEJ8sfzTjD8f2RX0qIIKJPHrO7NhV65xgjV4YEtOL_LRKVC2KPvfG6ycxATxOE3u9_hKEqMtiv-Zh8XF'
-article(test_url)
 

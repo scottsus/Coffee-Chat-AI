@@ -30,6 +30,7 @@ def twitter(twitter_handle):
             break
 
     tweet_df = pd.DataFrame(tweets, columns=['Datetime', 'Text', 'Username', 'Likes'])
+    
     # Log the tweet dataframe
     logging.info(f'Tweet DataFrame:\n{tweet_df}')
 
@@ -51,4 +52,4 @@ def twitter(twitter_handle):
     except Exception:
         logging.exception("Exception occurred")
 
-print(twitter('@chrispramana'))
+twitter('@chrispramana')
