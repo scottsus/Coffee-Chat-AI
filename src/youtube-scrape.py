@@ -14,6 +14,15 @@ from langchain.llms import OpenAI
 import os
 from langchain.text_splitter import CharacterTextSplitter
 from dotenv import load_dotenv
+from langchain.chains import LLMChain
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.vectorstores import FAISS
+from langchain.llms import OpenAI
+from langchain.chains.question_answering import load_qa_chain
+from langchain.callbacks import get_openai_callback
+from langchain.vectorstores import Chroma
+from dotenv import load_dotenv
 
 def youtube(youtube_url):
     load_dotenv()
@@ -40,11 +49,17 @@ def youtube(youtube_url):
                     finalString += text + " "
                 text_splitter = CharacterTextSplitter()
                 chunks = text_splitter.split_text(finalString)
-                summary_chain = load_summarize_chain(OpenAI(temperature=0),
-                                                chain_type="map_reduce",verbose=True)
-                summarize_document_chain = AnalyzeDocumentChain(combine_docs_chain=summary_chain)
-                answer = summarize_document_chain.run(chunks)
-                print(f'ans: {answer}')
+                embeddings = OpenAIEmbeddings()
+                knowledge_base = FAISS.from_texts(chunks, embeddings)
+                user_question = 'You are a talk show host and youre about to interview a very famous startup founder. Based on the video of this person, generate three potential interesting questions that a wide range of people might find interesting.'
+                docs = knowledge_base.similarity_search(user_question)
+                    
+                llm = OpenAI()
+                chain = load_qa_chain(llm, chain_type="stuff")
+                with get_openai_callback() as cb:
+                    response = chain.run(input_documents=docs, question=user_question)
+                    print(cb)
+                print(response)
 
 youtube_url = 'https://www.youtube.com/watch?v=UYOwweziqGI'
 youtube(youtube_url)
