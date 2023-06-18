@@ -19,23 +19,24 @@ def home():
 @app.route('/formData', methods=['POST'])
 def form_data():
     url = request.form.to_dict()['url']
-    print(f'url: {url}')
+
     # Regex patterns for YouTube, Twitter, and article links
     youtube_pattern = re.compile(r'^(https?:\/\/)?(www\.)?youtube\.com')
     twitter_pattern = re.compile(r'^@')
 
+    res = ''
     if youtube_pattern.match(url):
-        return youtube(url)
+        res = youtube(url)
     elif twitter_pattern.match(url):
-        return twitter(url)
+        res = twitter(url)
     else:
-        return article(url)
+        res = article(url)
     
     # add_to_question_bank(article(article_url))
     # add_to_question_bank(twitter(twitter_url))
     # add_to_question_bank(youtube(youtube_url))
 
-    return jsonify({'Url': url})
+    return jsonify({'questions': res})
 
 @app.route('/query')
 def query():
