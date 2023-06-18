@@ -66,8 +66,7 @@ def questions(scraped):
     chain = load_qa_chain(llm, chain_type="stuff")
     with get_openai_callback() as cb:
         response = chain.run(input_documents=docs, question=user_question)
-        print(cb)
-    print(response)
+    return response
 
 def article(article_url):
     scraped = scrape(article_url)
@@ -76,4 +75,4 @@ def article(article_url):
     print(question)
 
 test_url = 'https://techcrunch.com/2021/09/05/singapore-based-caregiving-startup-homage-raises-30m-series-c/?guccounter=1&guce_referrer=aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS8&guce_referrer_sig=AQAAAJPl9ewGP8Q6BDiQ3gAKTFqtucPF7IHWeLvvCbsr5rVm3K_pB70zbBssEOXan2VfI5TTFN2q8vbj_qcchBqjO3zEyRB_XEJ8sfzTjD8f2RX0qIIKJPHrO7NhV65xgjV4YEtOL_LRKVC2KPvfG6ycxATxOE3u9_hKEqMtiv-Zh8XF'
-
+article(test_url)
