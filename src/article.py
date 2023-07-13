@@ -16,8 +16,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 openai_key = os.getenv('OPENAI_API_KEY')
-log_file = 'logs/article.log'
-logging.basicConfig(filename=log_file, encoding='utf-8', level=logging.INFO)
+# log_file = 'logs/article.log'
+# logging.basicConfig(filename=log_file, encoding='utf-8', level=logging.INFO)
 
 def scrape(url):
     # Send a GET request to the URL and retrieve the HTML content

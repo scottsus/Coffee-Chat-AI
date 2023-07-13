@@ -12,8 +12,8 @@ def twitter(twitter_handle):
     print(f'Searching for {twitter_handle}')
     try:
         # Set up logging to a file with UTF-8 encoding
-        log_file = 'logs/twitter.log'
-        logging.basicConfig(filename=log_file, encoding='utf-8', level=logging.INFO)
+        # log_file = 'logs/twitter.log'
+        # logging.basicConfig(filename=log_file, encoding='utf-8', level=logging.INFO)
 
         # Scrape tweets using sntwitter
         scraper = sntwitter.TwitterSearchScraper(twitter_handle)
