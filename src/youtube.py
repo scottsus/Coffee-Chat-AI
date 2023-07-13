@@ -14,6 +14,7 @@ from langchain.callbacks import get_openai_callback
 from dotenv import load_dotenv
 
 def youtube(youtube_url):
+    print(f'Searching for {youtube_url}')
     try:
         load_dotenv()
         openai_key = os.getenv('OPENAI_API_KEY')
