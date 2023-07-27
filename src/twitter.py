@@ -35,7 +35,7 @@ def twitter(twitter_handle):
         tweet_df = pd.DataFrame(tweets, columns=['Datetime', 'Text', 'Username', 'Likes'])
         
         # Log the tweet dataframe
-        logging.info(f'Tweet DataFrame:\n{tweet_df}')
+        #logging.info(f'Tweet DataFrame:\n{tweet_df}')
 
         from pandasai import PandasAI
         from pandasai.llm.openai import OpenAI
@@ -48,7 +48,7 @@ def twitter(twitter_handle):
 
         # Log the prompt and run pandas_ai
         prompt = 'You are a talk show host and youre about to interview a very famous startup founder. Based on the tweets of this person, generate five potential interesting questions that a wide range of people might find interesting.'
-        logging.info(f'Prompt: {prompt}')
+        #logging.info(f'Prompt: {prompt}')
         questions = pandas_ai(tweet_df, prompt=prompt)
         questionlist = re.findall(r'\d+\.\s+(.*)', questions)
 
